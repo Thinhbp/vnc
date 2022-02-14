@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "hardhat/console.sol" ;
-
 
 
 contract vnc is  ERC20 {
@@ -34,8 +32,6 @@ contract vnc is  ERC20 {
 
 
     function currentPrice() public view returns (uint) {
-        console.log(_moneyInPool);
-        console.log(_tokenInPool);
         return _tokenInPool == 0 ? 0 :  _moneyInPool * 1000 / _tokenInPool  ; // *1000
     }
    
@@ -105,15 +101,15 @@ contract vnc is  ERC20 {
             amount = amount - buyNowCost;
 
         }
-	    if (tokenMint > 0 && tokenTranferForUser == 0)  { // Only ICO
+	if (tokenMint > 0 && tokenTranferForUser == 0)  { // Only ICO
             _mint(address(this), tokenMint);
             _mint(msg.sender, tokenMint);
-	    }
-	    if (tokenTranferForUser > 0 && tokenMint  == 0)  { // Only IDO
+	}
+	if (tokenTranferForUser > 0 && tokenMint  == 0)  { // Only IDO
             IERC20(address(this)).transfer(msg.sender, tokenTranferForUser);
-	    }
+	}
 
-            if (tokenTranferForUser > 0 && tokenMint  > 0) { // Both ICO and IDO
+        if (tokenTranferForUser > 0 && tokenMint  > 0) { // Both ICO and IDO
             _mint(address(this), tokenMint * 2);
             IERC20(address(this)).transfer(msg.sender, (tokenTranferForUser + tokenMint));
         }
