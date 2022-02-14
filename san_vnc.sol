@@ -51,8 +51,7 @@ contract vnc is  ERC20 {
         uint buyNowCost = 0;
         uint buyNowToken;
 
-        uint tokenMintInPool = 0;
-        uint tokenMintForUser = 0;
+        uint tokenMint = 0;
         uint tokenTranferForUser = 0;
 
         while (amount  >  0) {
@@ -80,8 +79,7 @@ contract vnc is  ERC20 {
             }
             _moneyInPool += buyNowCost;
             if (state == statusEnum.ICO) {
-                tokenMintInPool += buyNowToken; 
-                tokenMintForUser += buyNowToken;
+                tokenMint += buyNowToken; 
                 _tokenInPool += buyNowToken;
             } else {
                 tokenTranferForUser += buyNowToken;
@@ -104,9 +102,13 @@ contract vnc is  ERC20 {
             amount = amount - buyNowCost;
 
         }
-            _mint(address(this), tokenMintInPool);
-            _mint(msg.sender, tokenMintForUser);
+	if (tokenMint >0) {
+            _mint(address(this), tokenMint);
+            _mint(msg.sender, tokenMint);
+	}
+	if (tokenTranferForUser > 0) {
             IERC20(address(this)).transfer(msg.sender, tokenTranferForUser);
+	}
         emit buy(msg.sender, amount);
     }
 
