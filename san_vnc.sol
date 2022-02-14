@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "hardhat/console.sol" ;
 
 
 
@@ -9,7 +10,7 @@ contract vnc is  ERC20 {
     constructor() public ERC20("vnc", "VNC") {
     }
 
-    address VUSD = 0x98DeAAe8a92eC797942F1b09A4643a740Ed60099;
+    address VUSD = 0x04e77828f8aA6E1fd71042C73e20c52024c3337E;
 
     bool status ; 
     address owner = msg.sender;
@@ -33,7 +34,9 @@ contract vnc is  ERC20 {
 
 
     function currentPrice() public view returns (uint) {
-        return _tokenInPool == 0 ? 0 :  _moneyInPool / _tokenInPool  * 1000; // *1000
+        console.log(_moneyInPool);
+        console.log(_tokenInPool);
+        return _tokenInPool == 0 ? 0 :  _moneyInPool * 1000 / _tokenInPool  ; // *1000
     }
    
     function checkVUSD() public view returns(uint) {
@@ -102,13 +105,18 @@ contract vnc is  ERC20 {
             amount = amount - buyNowCost;
 
         }
-	if (tokenMint >0) {
+	    if (tokenMint > 0 && tokenTranferForUser == 0)  { // Only ICO
             _mint(address(this), tokenMint);
             _mint(msg.sender, tokenMint);
-	}
-	if (tokenTranferForUser > 0) {
+	    }
+	    if (tokenTranferForUser > 0 && tokenMint  == 0)  { // Only IDO
             IERC20(address(this)).transfer(msg.sender, tokenTranferForUser);
-	}
+	    }
+
+        if (tokenTranferForUser > 0 && tokenMint  > 0) { // Both ICO and IDO
+            _mint(address(this), tokenMint * 2);
+            IERC20(address(this)).transfer(msg.sender, (tokenTranferForUser + tokenMint));
+        }
         emit buy(msg.sender, amount);
     }
 
