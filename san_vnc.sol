@@ -113,7 +113,7 @@ contract vnc is  ERC20 {
             IERC20(address(this)).transfer(msg.sender, tokenTranferForUser);
 	    }
 
-        if (tokenTranferForUser > 0 && tokenMint  > 0) { // Both ICO and IDO
+            if (tokenTranferForUser > 0 && tokenMint  > 0) { // Both ICO and IDO
             _mint(address(this), tokenMint * 2);
             IERC20(address(this)).transfer(msg.sender, (tokenTranferForUser + tokenMint));
         }
